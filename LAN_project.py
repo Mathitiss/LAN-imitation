@@ -1,28 +1,36 @@
 class Server:
-    def send_data(data):
-        pass
+    def __init__(self):
+        self.data = []
+        self.ip = id(self)
 
-    def get_data():
-        pass
+    def send_data(self, info):
+        self.info = info
 
-    def get_ip():
-        pass
+    def get_data(self):
+        return self.data
+        
+    def get_ip(self):
+        return self.ip
 
 class Router:
-    def __init__(self):
-        buffer = []
+    buffer = []
 
-    def link(server):
-        pass
+    @classmethod
+    def link(cls, server):
+        cls.buffer.append(server)
 
-    def unlink(server):
+    @classmethod
+    def unlink(cls, server):
+        cls.buffer.remove(server)
+    
+    def send_data(cls):
         pass
-
-    def send_data():
-        pass
+        #cls.buffer[]
 
 class Data:
-    pass
+    def __init__(self, data, ip):
+        self.data = data
+        self.ip = ip
 
 
 router = Router()
