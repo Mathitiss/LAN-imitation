@@ -1,37 +1,48 @@
 class Server:
     def __init__(self):
-        self.data = []
+        self.buffer = []
         self.ip = id(self)
+        self.router = None
 
     def send_data(self, info):
-        self.info = info
+        if self.router:
+            self.router.buffer.append(info)
 
     def get_data(self):
-        return self.data
+        d = self.buffer[:]
+        self.buffer.clear
+        return d
         
     def get_ip(self):
         return self.ip
 
 class Router:
-    buffer = []
+    def __init__(self):
+        self.buffer = []
+        self.servers = {}
 
-    @classmethod
-    def link(cls, server):
-        cls.buffer.append(server)
+    def link(self, server):
+        self.servers[server.ip] = server
+        server.router = self
 
-    @classmethod
-    def unlink(cls, server):
-        cls.buffer.remove(server)
+    def unlink(self, server):
+        s = self.servers.pop(server.ip, False)
+        if s:
+            server.router = None
     
-    def send_data(cls):
-        pass
-        #cls.buffer[]
+    def send_data(self):
+        for i in self.buffer:
+            if i.ip in self.servers:
+                self.servers[i.ip].buffer.append(i)
+        self.buffer.clear
 
 class Data:
     def __init__(self, data, ip):
         self.data = data
         self.ip = ip
 
+'''
+TEST:
 
 router = Router()
 sv_from = Server()
@@ -48,3 +59,4 @@ sv_to.send_data(Data("Hi", sv_from.get_ip()))
 router.send_data()
 msg_lst_from = sv_from.get_data()
 msg_lst_to = sv_to.get_data()
+'''
